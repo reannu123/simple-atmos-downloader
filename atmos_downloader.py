@@ -100,7 +100,7 @@ if isDlFirmware == "y":
     version = input()
     # if version is empty, use the latest version
     if version == "":
-        version = "16.0.0"
+        version = "16.0.2"
     print("Downloading firmware " + version)
     url = f"https://archive.org/download/nintendo-switch-global-firmwares/Firmware%20{version}.zip"
     file = "firmware.zip"
