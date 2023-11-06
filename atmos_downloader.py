@@ -3,6 +3,37 @@ import zipfile
 import os
 from tqdm import tqdm
 import shutil
+from bs4 import BeautifulSoup
+
+def get_latest_firmware_version():
+    url = 'https://yls8.mtheall.com/ninupdates/reports.php'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Find the table
+    table = soup.find('table')
+
+    # Get all rows in the table
+    rows = table.find_all('tr')
+
+    # Reverse the list of rows
+    rows.reverse()
+
+    # Iterate over the rows
+    for row in rows:
+        # Get all cells in the row
+        cells = row.find_all('td')
+
+        # Iterate over the cells
+        for i, cell in enumerate(cells):
+            # If the cell contains the text "Switch"
+            if 'Switch' in cell.text:
+                # Get the previous cell
+                previous_cell = cells[i - 1]
+
+                # Return the text in the previous cell
+                return previous_cell.text
+
 
 if os.path.exists('download'):
     # Delete the folder and its contents
@@ -100,7 +131,7 @@ if isDlFirmware == "y":
     version = input()
     # if version is empty, use the latest version
     if version == "":
-        version = "17.0.0"
+        version = get_latest_firmware_version()
     print("Downloading firmware " + version)
     url = f"https://archive.org/download/nintendo-switch-global-firmwares/Firmware%20{version}.zip"
     file = "firmware.zip"
