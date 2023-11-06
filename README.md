@@ -1,10 +1,10 @@
 # simple-atmos-downloader
 Simple Switch CFW Downloader that downloads Atmosphere, Hekate, and required patches.
 <br>
-Updated to version 16.0.0 
+Updated to version 17.0.0 
 
 ## Requirements 
-Install each via `pip install <requirement>`
-- requests 
-- tqdm
+- Python 3
 
+## Install Dependencies 
+`pip install -r requirements.txt`
