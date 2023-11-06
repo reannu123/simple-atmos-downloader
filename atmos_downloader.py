@@ -5,6 +5,8 @@ from tqdm import tqdm
 import shutil
 from bs4 import BeautifulSoup
 
+directory = "copy_to_sd"
+
 def get_latest_firmware_version():
     url = 'https://yls8.mtheall.com/ninupdates/reports.php'
     response = requests.get(url)
@@ -35,11 +37,11 @@ def get_latest_firmware_version():
                 return previous_cell.text
 
 
-if os.path.exists('download'):
+if os.path.exists(directory):
     # Delete the folder and its contents
     
-    shutil.rmtree('download')
-    os.makedirs('download')
+    shutil.rmtree(directory)
+    os.makedirs(directory)
 
 def dl_file(filename:str, url:str="")->bool:
     r = requests.get(url, stream=True, allow_redirects=True)
@@ -70,7 +72,7 @@ if isDlAtmos:
         if asset['name'].endswith('.zip'):
             dl_file(asset['name'], asset['browser_download_url'])
             print(asset['browser_download_url'])
-            zipfile.ZipFile(asset['name']).extractall("download")
+            zipfile.ZipFile(asset['name']).extractall(directory)
 
             # Delete the zip file
             os.remove(asset['name'])
@@ -92,14 +94,14 @@ if isDlHekate:
         if asset['name'].endswith('.zip'):
             dl_file(asset['name'], asset['browser_download_url'])
             print(asset['browser_download_url'])
-            zipfile.ZipFile(asset['name']).extractall("download")
+            zipfile.ZipFile(asset['name']).extractall(directory)
             # If payload.bin exists, delete it
-            if os.path.exists("download/payload.bin"):
-                os.remove("download/payload.bin")
+            if os.path.exists(f"{directory}/payload.bin"):
+                os.remove(f"{directory}/payload.bin")
             # Rename all binary files to payload.bin
-            for file in os.listdir("download"):
+            for file in os.listdir(directory):
                 if file.endswith(".bin"):
-                    os.rename(f"download/{file}", f"download/payload.bin")
+                    os.rename(f"{directory}/{file}", f"{directory}/payload.bin")
 
             # Delete the zip file
             os.remove(asset['name'])
@@ -115,7 +117,7 @@ if isDlPatches:
     response = requests.get(url)
     dl_file('sigpatches.zip', url)
     print(url)
-    zipfile.ZipFile('sigpatches.zip').extractall("download")
+    zipfile.ZipFile('sigpatches.zip').extractall(directory)
     # Delete the zip file
     os.remove("sigpatches.zip")
     print()
@@ -136,10 +138,10 @@ if isDlFirmware == "y":
     url = f"https://archive.org/download/nintendo-switch-global-firmwares/Firmware%20{version}.zip"
     file = "firmware.zip"
     print(url)
-    if os.path.exists('download/firmware'):
+    if os.path.exists(f'{directory}/firmware'):
         # Delete the firmware folder
-        os.rmdir('download/firmware')
-        os.makedirs('download/firmware')
+        os.rmdir(f'{directory}/firmware')
+        os.makedirs(f'{directory}/firmware')
     dl_file(file, url)
     
-    zipfile.ZipFile(file).extractall("download/firmware")
+    zipfile.ZipFile(file).extractall(f"{directory}/firmware")
