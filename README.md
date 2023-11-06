@@ -1,7 +1,9 @@
 # simple-atmos-downloader
 Simple Switch CFW Downloader that downloads Atmosphere, Hekate, and required patches.
 <br>
-Updated to version 17.0.0 
+Atmosphere Version is dynamically pulled from the Atmosphere GitHub releases page.
+<br>
+Switch Firmware Version is dynamically pulled from y8's Switchbrew Firmware page.
 
 ## Requirements 
 - Python 3
