@@ -135,13 +135,24 @@ if isDlFirmware == "y":
     if version == "":
         version = get_latest_firmware_version()
     print("Downloading firmware " + version)
-    url = f"https://archive.org/download/nintendo-switch-global-firmwares/Firmware%20{version}.zip"
-    file = "firmware.zip"
-    print(url)
-    if os.path.exists(f'{directory}/firmware'):
-        # Delete the firmware folder
-        os.rmdir(f'{directory}/firmware')
-        os.makedirs(f'{directory}/firmware')
-    dl_file(file, url)
+    url = f'https://api.github.com/repos/THZoria/NX_Firmware/releases/tags/{version}'
+    response = requests.get(url)
+
+    # Raise an exception if the API call fails.
+    response.raise_for_status()
+
+    data = response.json()
+    for asset in data['assets']:
+        if asset['name'].endswith('.zip'):
+            if os.path.exists(f'{directory}/firmware'):
+                # Delete the firmware folder
+                os.rmdir(f'{directory}/firmware')
+                os.makedirs(f'{directory}/firmware')
+            dl_file(asset['name'], asset['browser_download_url'])
+            zipfile.ZipFile(asset['name']).extractall(f"{directory}/firmware")
+            print()
+            break
+
+
+
     
-    zipfile.ZipFile(file).extractall(f"{directory}/firmware")
